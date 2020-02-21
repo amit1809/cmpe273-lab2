@@ -56,17 +56,31 @@ def add_class():
         return "Please pass JSON object"
     content = request.get_json()
     last_class_id += 1
-    classes.append({'id': last_class_id, 'name': content["name"]})
+    classes.append({'id': last_class_id, 'name': content["name"], 'students': []})
     return jsonify(classes)
+
 
 @app.route('/student_class', methods=['PATCH'])
 def add_student_to_class():
-    global last_class_id
-    if not request.is_json:
-        return "Please pass JSON object"
-    content = request.get_json()
-    last_class_id += 1
-    classes.append({'id': last_class_id, 'name': content["name"]})
+    student_data = None
+    if 'st_id' in request.args:
+        st_id = int(request.args['st_id'])
+    else:
+        return "Error: Please provide Student ID"
+    if 'cls_id' in request.args:
+        cls_id = int(request.args['cls_id'])
+    else:
+        return "Error: Please provide Class ID"
+
+    for student in students:
+        if student['id'] == st_id:
+            student_data = student
+
+    for classs in classes:
+        if classs['id'] == cls_id:
+            classs['students'].append(student_data)
+
     return jsonify(classes)
+
 
 app.run()
