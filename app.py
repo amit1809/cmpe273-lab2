@@ -59,5 +59,14 @@ def add_class():
     classes.append({'id': last_class_id, 'name': content["name"]})
     return jsonify(classes)
 
+@app.route('/student_class', methods=['PATCH'])
+def add_student_to_class():
+    global last_class_id
+    if not request.is_json:
+        return "Please pass JSON object"
+    content = request.get_json()
+    last_class_id += 1
+    classes.append({'id': last_class_id, 'name': content["name"]})
+    return jsonify(classes)
 
 app.run()
